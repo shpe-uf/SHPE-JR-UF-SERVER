@@ -4,7 +4,7 @@ const { UserInputError } = require("apollo-server");
 
 const User = require("../../models/User.js");
 
-const { SECRET_KEY } = require("../../config.js");
+require("dotenv").config();
 
 const {
   validateRegisterInput,
@@ -20,7 +20,7 @@ function generateToken(user, time) {
       firstName: user.firstName,
       lastName: user.lastName,
     },
-    SECRET_KEY,
+    process.env.SECRET,
     {
       expiresIn: time,
     }
