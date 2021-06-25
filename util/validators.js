@@ -8,7 +8,7 @@ module.exports.validateRegisterInput = (
 ) => {
   const errors = {};
 
-  const nameValidator = /^[a-zA-Z ',.-]{3,20}$/;
+  const nameValidator = /^[a-zA-ZÑñ ',.-]{2,20}$/;
   const usernameValidator = /^(?=.{6,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/i;
   const emailRegex = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,12})$/;
   const passwordValidator = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-.]).{8,}$/;
@@ -18,7 +18,7 @@ module.exports.validateRegisterInput = (
   } else {
     if (!firstName.match(nameValidator)) {
       errors.firstName =
-        "First Name must be at least 3 characters, max 20. No special characters or numbers.";
+        "First Name must be at least 2 characters, max 20. No special characters or numbers.";
     }
   }
 
