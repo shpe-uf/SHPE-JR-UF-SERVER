@@ -14,6 +14,16 @@ module.exports = gql`
     createdAt: String!
   }
 
+  type Event {
+    id: ID!
+    name: String!
+    date: String!
+    expiration: String!
+    points: Int!
+    code: String!
+    createdAt: String!
+  }
+
   ### QUERY AND MUTATION INPUTS ###
 
   input RegisterInput {
