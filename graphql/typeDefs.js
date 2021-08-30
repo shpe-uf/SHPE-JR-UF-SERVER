@@ -35,11 +35,19 @@ module.exports = gql`
     email: String!
   }
 
+  input CreateEventInput {
+    name: String!
+    code: String!
+    points: String!
+    expiration: String!
+  }
+
   ### QUERIES LIST ###
 
   type Query {
     getUsers: [User]
     getUser(userId: ID!): User
+    getEvents: [Event]
   }
 
   ### MUTATIONS LIST ###
@@ -48,5 +56,6 @@ module.exports = gql`
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
     deleteUser(userId: ID!): String!
+    createEvent(createEventInput: CreateEventInput): [Event]
   }
 `;

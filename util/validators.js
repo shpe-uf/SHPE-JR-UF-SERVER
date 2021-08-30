@@ -82,11 +82,11 @@ module.exports.validateLoginInput = (username, password) => {
 module.exports.validateCreateEventInput = (name, code, points, expiration, createdAt) => {
   const errors = {};
 
-  const nameValidator = = /^[a-zA-Z0-9- ]{6,50}$/i;
+  const nameValidator = /^[a-zA-Z0-9- ]{6,50}$/i;
   const codeValidator = /^[a-zA-Z0-9]{6,50}$/i;
 
   if(name.trim() === ''){
-    errors.name = "Name is required",
+    errors.name = "Name is required";
   } else {
     if(!name.match(nameValidator)) {
       errors.name = "Event name must be at least 6 characters, max 50. No special characters, except for hyphens (-) and dashes (/).";

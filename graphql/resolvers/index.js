@@ -1,5 +1,5 @@
 const usersResolvers = require("./users.js");
-const eventResolvers = require("./events.js")
+const eventsResolvers = require("./events.js")
 
 module.exports = {
   Query: {
