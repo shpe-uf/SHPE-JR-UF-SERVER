@@ -155,9 +155,10 @@ module.exports = {
         firstName,
         lastName,
         username,
-        password,
         email,
+        password,
         createdAt: new Date().toISOString(),
+        permission: "member",
       });
 
       const res = await newUser.save();
