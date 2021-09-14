@@ -42,6 +42,8 @@ module.exports = gql`
     expiration: String!
   }
 
+
+
   ### QUERIES LIST ###
 
   type Query {
@@ -57,5 +59,6 @@ module.exports = gql`
     login(username: String!, password: String!): User!
     deleteUser(userId: ID!): String!
     createEvent(createEventInput: CreateEventInput): [Event]
+    deleteEvent(eventName: String!): [Event]
   }
 `;

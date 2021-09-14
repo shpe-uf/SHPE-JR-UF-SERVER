@@ -1,5 +1,6 @@
 const { UserInputError } = require('apollo-server')
 const { createSourceEventStream } = require('graphql')
+const { events } = require('../../models/Event.js')
 
 const Event = require('../../models/Event.js')
 const User = require('../../models/User.js')
@@ -66,6 +67,29 @@ module.exports = {
 
             return updatedEvents;
 
+        },
+
+        async deleteEvent(_,{eventName}){
+            const errors = ""
+            const users = User.find()
+            const event = await Event.findOne({name: eventName});
+
+            if (!event){
+                errors.general = "Event not found.";
+                throw new UserInputError("Event not found.", {errors});
+            }
+
+            // Event type doesnt have semester type
+
+            await Event.deleteOne({name: eventName})
+
+            const updatedEvents = await Event.find();
+
+            return updatedEvents;
         }
-    }
+    },
+
+
+
+
 }
