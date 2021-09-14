@@ -83,7 +83,7 @@ module.exports = {
 
             await Event.deleteOne({name: eventName})
 
-            const updatedEvents = await Event.find();
+            let updatedEvents = await Event.find();
 
             return updatedEvents;
         }
