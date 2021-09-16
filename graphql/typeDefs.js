@@ -44,6 +44,5 @@ module.exports = gql`
       currentEmail: String!
       permission: String!
     ): User!
-    )
   }
 `;
