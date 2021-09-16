@@ -9,6 +9,7 @@ require("dotenv").config();
 const {
   validateRegisterInput,
   validateLoginInput,
+  validateEmailInput,
 } = require("../../util/validators.js");
 
 function generateToken(user, time) {
@@ -181,5 +182,70 @@ module.exports = {
         throw new Error(err);
       }
     },
+    async changePermission(_,
+      {
+        email,
+        currentEmail,
+        permission
+      }
+    ) {
+
+      let { errors, valid } = validateEmailInput(email);
+
+      if (!valid) {
+        throw new UserInputError("Errors.", {
+          errors,
+        });
+      }
+
+      if (email === currentEmail) {
+        valid = false;
+        errors.general = "Can't change your own permissions";
+        throw new UserInputError("Can't change your own permissions", {
+          errors,
+        });
+      }
+
+      //loggedInUser is the current user that's trying to change another user's permissions
+      const loggedInUser = await User.findOne({
+        email: currentEmail,
+      });
+
+      if (!loggedInUser) {
+        errors.general = "User not found";
+        throw new UserInputError("User not found", {
+          errors,
+        });
+      }
+
+      if(!loggedInUser.permission.includes('admin')){
+        valid = false;
+        errors.general = "Must be an admin to change permission";
+        throw new UserInputError("Must be an admin to change permission", {
+          errors,
+        });
+      }
+
+      const options = {new: true}
+
+      const user = await User.findOneAndUpdate(
+        {
+          email,
+        },
+        {
+          permission,
+        },
+        options
+      );
+      if (!user) {
+        errors.general = "User not found";
+        throw new UserInputError("User not found", {
+          errors,
+        });
+      } else {
+        return user;
+      }
+    }
+
   },
 };
