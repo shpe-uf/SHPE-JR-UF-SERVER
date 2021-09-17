@@ -189,7 +189,6 @@ module.exports = {
         permission
       }
     ) {
-      console.log("changePermission");
       let { errors, valid } = validateEmailInput(email);
 
       if (!valid) {
