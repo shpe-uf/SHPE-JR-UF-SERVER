@@ -9,9 +9,10 @@ module.exports = gql`
     firstName: String!
     lastName: String!
     username: String!
-    password: String!
     email: String!
+    password: String!
     createdAt: String!
+    permission: String!
   }
 
   ### QUERY AND MUTATION INPUTS ###
@@ -38,5 +39,10 @@ module.exports = gql`
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
     deleteUser(userId: ID!): String!
+    changePermission(
+      email: String!
+      currentEmail: String!
+      permission: String!
+    ): User!
   }
 `;
