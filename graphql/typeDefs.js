@@ -50,6 +50,7 @@ module.exports = gql`
     getUsers: [User]
     getUser(userId: ID!): User
     getEvents: [Event]
+    getEvent(eventId: ID!): Event
   }
 
   ### MUTATIONS LIST ###

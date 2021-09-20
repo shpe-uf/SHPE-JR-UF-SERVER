@@ -21,6 +21,19 @@ module.exports = {
             } catch(err){
                 throw new Error(err);
             }
+        },
+        async getEvent(_, {eventId}){
+            try {
+                let event = await Event.findById(eventId);
+                if(event){
+                    return event;
+                } else {
+                    throw new Error("Event not found.");
+                }
+            } catch (err) {
+                throw new Error("Invalid ID provided.");
+            }
+
         }
     },
 
@@ -86,8 +99,10 @@ module.exports = {
             let updatedEvents = await Event.find();
 
             return updatedEvents;
-        }
+        },
     },
+
+    
 
 
 
