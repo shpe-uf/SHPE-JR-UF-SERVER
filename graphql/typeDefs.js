@@ -38,6 +38,8 @@ module.exports = gql`
   type Query {
     getUsers: [User]
     getUser(userId: ID!): User
+    getSchools: [School]
+    getSchool(schoolId: ID!): School
   }
 
   ### MUTATIONS LIST ###
@@ -51,5 +53,7 @@ module.exports = gql`
       currentEmail: String!
       permission: String!
     ): User!
+    createSchool(name: String!): School!
+    addUser(schoolId: String!, username: String!): School!
   }
 `;

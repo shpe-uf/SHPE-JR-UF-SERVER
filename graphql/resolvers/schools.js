@@ -6,12 +6,6 @@ const School = require("../../models/School.js");
 
 require("dotenv").config();
 
-const {
-  validateRegisterInput,
-  validateLoginInput,
-  validateEmailInput
-} = require("../../util/validators.js");
-
 module.exports = {
   Query: {
     async getSchools() {
