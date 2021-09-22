@@ -13,6 +13,13 @@ module.exports = gql`
     password: String!
     createdAt: String!
     permission: String!
+    school: School!
+  }
+
+  type School {
+    id: ID!
+    name: String!
+    users: [User]!
   }
 
   ### QUERY AND MUTATION INPUTS ###
