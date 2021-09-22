@@ -24,13 +24,13 @@ module.exports = {
         throw new Error(err);
       }
     },
-    async getUser(_, { schoolId }) {
+    async getSchool(_, { schoolId }) {
       try {
-        const school = await User.findById(schoolId);
+        const school = await School.findById(schoolId);
         if (school) {
           return school;
         } else {
-          throw new Error("User not found");
+          throw new Error("School not found");
         }
       } catch (err) {
         throw new Error(err);
@@ -67,7 +67,7 @@ module.exports = {
                 }
               ],
               $sort: {
-                lastName: 1
+                lastName: 1,
                 firstName: 1
               }
             }
