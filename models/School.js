@@ -9,10 +9,6 @@ const schoolSchema = new Schema({
     type: String,
     required: true,
   },
-  permission: {
-    type: String,
-    default: "member",
-  },
   users: [
     {
       firstName: String,

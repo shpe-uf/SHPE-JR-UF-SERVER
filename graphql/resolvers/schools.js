@@ -38,16 +38,27 @@ module.exports = {
     }
   },
   Mutation: {
-    async addUser(_, { schoolId, username }) {
+    async createSchool(_, { name }) {
+      const newSchool = new School({
+        name,
+        createdAt: new Date().toISOString()
+      });
 
+      await newTask.save();
+
+      const res = School.findOne({ name });
+
+      return res;
+    },
+    async addUser(_, { schoolId, username }) {
       const user = await User.findOne({
-        username,
+        username
       });
 
       if (!user) {
         errors.general = "User not found.";
         throw new UserInputError("User not found.", {
-          errors,
+          errors
         });
       }
 
@@ -63,7 +74,7 @@ module.exports = {
                   firstName: user.firstName,
                   lastName: user.lastName,
                   username: user.username,
-                  email: user.email,
+                  email: user.email
                 }
               ],
               $sort: {
