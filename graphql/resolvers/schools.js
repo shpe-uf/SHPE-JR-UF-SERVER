@@ -33,12 +33,30 @@ module.exports = {
   },
   Mutation: {
     async createSchool(_, { name }) {
+      name = name.trim();
+
+      /*check that user/email doesn't already exist*/
+      const isNameDuplicate = await School.findOne({
+        name,
+      });
+
+      if (isNameDuplicate) {
+        throw new UserInputError(
+          "An account with that name already exists.",
+          {
+            errors: {
+              name: "An account with that name already exists.",
+            },
+          }
+        );
+      }
+
       const newSchool = new School({
         name,
         createdAt: new Date().toISOString()
       });
 
-      await newTask.save();
+      await newSchool.save();
 
       const res = School.findOne({ name });
 
@@ -56,33 +74,8 @@ module.exports = {
         });
       }
 
-      var updatedSchool = await School.findOneAndUpdate(
-        {
-          schoolId
-        },
-        {
-          $push: {
-            users: {
-              $each: [
-                {
-                  firstName: user.firstName,
-                  lastName: user.lastName,
-                  username: user.username,
-                  email: user.email
-                }
-              ],
-              $sort: {
-                lastName: 1,
-                firstName: 1
-              }
-            }
-          },
-          $inc: pointsIncrease
-        },
-        {
-          new: true
-        }
-      );
+      var updatedSchool = await School.findOneAndUpdate( {schoolId} );
+      
       return updatedSchool;
     }
   }
