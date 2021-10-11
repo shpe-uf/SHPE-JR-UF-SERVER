@@ -96,3 +96,32 @@ module.exports.validateEmailInput = (email) => {
     valid: Object.keys(errors).length < 1,
   };
 };
+
+module.exports.validateCreateEventInput = (name, code, points, expiration, createdAt) => {
+  const errors = {};
+
+  const nameValidator = /^[a-zA-Z0-9- ]{6,50}$/i;
+  const codeValidator = /^[a-zA-Z0-9]{6,50}$/i;
+
+  if(name.trim() === ''){
+    errors.name = "Name is required";
+  } else {
+    if(!name.match(nameValidator)) {
+      errors.name = "Event name must be at least 6 characters, max 50. No special characters, except for hyphens (-) and dashes (/).";
+    }
+  }
+
+  if(code.trim() === ""){
+    errors.code = "Code is required."
+  } else {
+    if(!code.match(codeValidator)){
+      errors.code = "Event code must be at least 6 characters, max 50. No special characters.";
+    }
+  }
+
+  if(expiration.trim() === ""){
+    errors.expiration = "Expires in is required."
+  }
+
+  return {errors, valid: Object.keys(errors).length < 1};
+};

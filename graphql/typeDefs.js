@@ -9,10 +9,20 @@ module.exports = gql`
     firstName: String!
     lastName: String!
     username: String!
-    email: String!
     password: String!
+    email: String!
     createdAt: String!
     permission: String!
+  }
+
+  type Event {
+    id: ID!
+    name: String!
+    date: String!
+    expiration: String!
+    points: Int!
+    code: String!
+    createdAt: String!
   }
 
   ### QUERY AND MUTATION INPUTS ###
@@ -26,11 +36,29 @@ module.exports = gql`
     email: String!
   }
 
+  input CreateEventInput {
+    name: String!
+    code: String!
+    points: String!
+    expiration: String!
+  }
+
+  input EditEventInput{
+    name: String!
+    code: String
+    points: String
+    expiration: String
+  }
+
+
+
   ### QUERIES LIST ###
 
   type Query {
     getUsers: [User]
     getUser(userId: ID!): User
+    getEvents: [Event]
+    getEvent(eventId: ID!): Event
   }
 
   ### MUTATIONS LIST ###
@@ -44,5 +72,8 @@ module.exports = gql`
       currentEmail: String!
       permission: String!
     ): User!
+    createEvent(createEventInput: CreateEventInput): [Event]
+    deleteEvent(eventName: String!): [Event]
+    editEvent(editEventInput: EditEventInput): Event
   }
 `;
