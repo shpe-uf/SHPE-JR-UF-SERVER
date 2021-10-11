@@ -34,12 +34,13 @@ module.exports = {
                 throw new Error("Invalid ID provided.");
             }
 
-        }
+        },
+        
     },
 
     Mutation: {
-        async createEvent(_, {createEventInput: {name, code, points, expiration, createdAt}}){
-            const { valid, errors } = validateCreateEventInput(name, code, points, expiration, createdAt);
+        async createEvent(_, {createEventInput: {name, code, points, expiration}}){
+            const { valid, errors } = validateCreateEventInput(name, code, points, expiration);
 
             if(!valid){throw new UserInputError("User Input Error", {errors});}
 
@@ -49,7 +50,7 @@ module.exports = {
 
             isEventNameDuplicate = await Event.findOne({name});
             isEventCodeDuplicate = await Event.findOne({ code });
-
+            
             if(isEventNameDuplicate){
                 throw new UserInputError("An event with that name already exists.", {
                     errors:{
@@ -57,7 +58,7 @@ module.exports = {
                     }
                 });
             }
-
+            
             if (isEventCodeDuplicate) {
               throw new UserInputError("An event with that code already exists.", {
                 errors: {
@@ -99,6 +100,28 @@ module.exports = {
             let updatedEvents = await Event.find();
 
             return updatedEvents;
+        },
+
+        async editEvent(_, {editEventInput:{name,code,points,expiration,}}){
+            const errors = ""
+            //const { valid, errors } = validateCreateEventInput(name, code, points, expiration, createdAt);
+
+            //if(!valid){throw new UserInputError("User Input Error", {errors});}
+
+
+            const event = Event.findOne({name});
+
+            if(event){
+                const updatedEvent = await Event.findOneAndUpdate( {name}, {
+                    name,
+                    code,
+                    points,
+                    expiration,
+                }, {new: true,})
+                return updatedEvent;
+            } else {
+                throw new Error("Event not found");
+            }
         },
     },
 

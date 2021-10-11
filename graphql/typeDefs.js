@@ -42,6 +42,13 @@ module.exports = gql`
     expiration: String!
   }
 
+  input EditEventInput{
+    name: String!
+    code: String!
+    points: String!
+    expiration: String!
+  }
+
 
 
   ### QUERIES LIST ###
@@ -61,5 +68,6 @@ module.exports = gql`
     deleteUser(userId: ID!): String!
     createEvent(createEventInput: CreateEventInput): [Event]
     deleteEvent(eventName: String!): [Event]
+    editEvent(editEventInput: EditEventInput): [Event]
   }
 `;
