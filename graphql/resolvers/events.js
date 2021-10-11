@@ -108,7 +108,6 @@ module.exports = {
 
             //if(!valid){throw new UserInputError("User Input Error", {errors});}
 
-
             const event = Event.findOne({name});
 
             if(event){
@@ -117,7 +116,7 @@ module.exports = {
                     code,
                     points,
                     expiration,
-                }, {new: true,})
+                }, {new: true, useFindAndModify:false})
                 return updatedEvent;
             } else {
                 throw new Error("Event not found");

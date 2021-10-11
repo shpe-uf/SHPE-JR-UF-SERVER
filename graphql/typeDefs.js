@@ -44,9 +44,9 @@ module.exports = gql`
 
   input EditEventInput{
     name: String!
-    code: String!
-    points: String!
-    expiration: String!
+    code: String
+    points: String
+    expiration: String
   }
 
 
@@ -68,6 +68,6 @@ module.exports = gql`
     deleteUser(userId: ID!): String!
     createEvent(createEventInput: CreateEventInput): [Event]
     deleteEvent(eventName: String!): [Event]
-    editEvent(editEventInput: EditEventInput): [Event]
+    editEvent(editEventInput: EditEventInput): Event
   }
 `;
