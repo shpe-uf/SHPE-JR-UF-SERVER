@@ -9,9 +9,10 @@ module.exports = gql`
     firstName: String!
     lastName: String!
     username: String!
-    password: String!
     email: String!
+    password: String!
     createdAt: String!
+    permission: String!
   }
   
   type Theme {
@@ -59,5 +60,10 @@ module.exports = gql`
     deleteUser(userId: ID!): String!
     createTheme(themeInput: ThemeInput): Theme!
     deleteTheme(themeId: ID!): String!
+    changePermission(
+      email: String!
+      currentEmail: String!
+      permission: String!
+    ): User!
   }
 `;
