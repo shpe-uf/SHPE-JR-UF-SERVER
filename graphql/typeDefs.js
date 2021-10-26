@@ -14,6 +14,16 @@ module.exports = gql`
     createdAt: String!
     permission: String!
   }
+  
+  type Theme {
+    id: ID!
+    title: String!
+    picture: String!
+    description: String!
+    activity: String!
+    linkToForm: String!    
+    createdAt: String!
+  }
 
   ### QUERY AND MUTATION INPUTS ###
 
@@ -26,11 +36,20 @@ module.exports = gql`
     email: String!
   }
 
+  input ThemeInput {
+    title: String!
+    picture: String!
+    description: String!
+    activity: String!
+    linkToForm: String!        
+  }
+
   ### QUERIES LIST ###
 
   type Query {
     getUsers: [User]
     getUser(userId: ID!): User
+    getThemes: [Theme]
   }
 
   ### MUTATIONS LIST ###
@@ -39,6 +58,8 @@ module.exports = gql`
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
     deleteUser(userId: ID!): String!
+    createTheme(themeInput: ThemeInput): Theme!
+    deleteTheme(themeId: ID!): String!
     changePermission(
       email: String!
       currentEmail: String!
