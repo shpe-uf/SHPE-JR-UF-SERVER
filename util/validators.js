@@ -125,3 +125,15 @@ module.exports.validateCreateEventInput = (name, code, points, expiration, creat
 
   return {errors, valid: Object.keys(errors).length < 1};
 };
+
+module.exports.validateRedeemPointsInput = (code) =>{
+  const errors = {};
+
+  if (code.trim() == ""){
+    errors.code = "No code was provided";
+  }
+
+  return{errors, valid: Object.keys(errors).length < 1,};
+
+};
+
