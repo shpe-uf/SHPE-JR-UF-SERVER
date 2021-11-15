@@ -50,6 +50,11 @@ module.exports = gql`
     expiration: String
   }
 
+  input RedeemPointsInput {
+    code: String!
+    username: String!
+  }
+
 
 
   ### QUERIES LIST ###
@@ -75,5 +80,6 @@ module.exports = gql`
     createEvent(createEventInput: CreateEventInput): [Event]
     deleteEvent(eventName: String!): [Event]
     editEvent(editEventInput: EditEventInput): Event
+    redeemPoints(redeemPointsInput: RedeemPointsInput): User!
   }
 `;
