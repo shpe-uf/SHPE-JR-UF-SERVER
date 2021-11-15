@@ -10,6 +10,7 @@ const {
   validateRegisterInput,
   validateLoginInput,
   validateEmailInput,
+  validateRedeemPointsInput,
 } = require("../../util/validators.js");
 
 function generateToken(user, time) {
@@ -244,6 +245,55 @@ module.exports = {
       } else {
         return user;
       }
+    },
+    async redeemPoints(_, {redeemPointsInputs: {code, username}}){
+        code = code.toLowerCase().trim().replace(/ /g, "");
+
+        const { valid, errors } = validateRedeemPointsInput(code);
+
+        if(!valid){
+          throw new UserInputError("Errors", {errors,});
+        }
+
+        const event = await Event.findOne({code,});
+
+        const user = await User.findOne({username});
+
+        if(!event){
+          errors.general = "Event not found.";
+          throw new UserInputError("Event not found.",{errors,});
+        }
+
+        if (!user){
+          errors.general = "User not found.";
+          throw new UserInputError("Event not found.", {errors,});
+        }
+
+        if (Date.parse(event.expiration) < Date.now()) {
+          errors.general = "Event code expired";
+          throw new UserInputError("Event code expired", {
+            errors,
+          });
+        }
+
+        user.events.map((userEvent) => {
+          if (String(userEvent.name) == String(event.name)) {
+            errors.general = "Event code already redeemed.";
+            throw new UserInputError("Event code already redeemed.", {
+              errors,
+            });
+          }
+        });
+``
+        // if(event.request){
+        //   const request = await Request.findOne({
+        //     name: event.name,
+        //     username: user.username,
+        //   });
+        // }
+
+
+
     }
 
   },
