@@ -23,7 +23,11 @@ const eventSchema = new Schema({
     createdAt: {
         type: String,
         required: true
-    }
+    },
+    request:{
+        type: Boolean,
+        required: true
+    },
 
 });
 
