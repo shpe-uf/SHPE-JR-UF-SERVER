@@ -30,7 +30,14 @@ const userSchema = new Schema({
   permission: {
     type: String,
     default: "member",
-  }
+  },
+  events:[
+    {
+      name: String,
+      createdAt: String,
+      points: Number
+    }
+  ]
 });
 
 module.exports = model("User", userSchema);
