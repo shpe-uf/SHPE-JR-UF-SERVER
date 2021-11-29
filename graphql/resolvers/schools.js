@@ -62,7 +62,9 @@ module.exports = {
 
       return res;
     },
-    async addUser(_, { schoolId, username }) {
+    async addStudent(_, { schoolId, username }) {
+      console.log(schoolId);
+      console.log(username);
       const user = await User.findOne({
         username
       });
@@ -75,7 +77,7 @@ module.exports = {
       }
 
       var updatedSchool = await School.findOneAndUpdate( {schoolId} );
-      
+
       return updatedSchool;
     }
   }

@@ -54,6 +54,6 @@ module.exports = gql`
       permission: String!
     ): User!
     createSchool(name: String!): School!
-    addUser(schoolId: String!, username: String!): School!
+    addStudent(schoolId: String!, username: String!): School!
   }
 `;
