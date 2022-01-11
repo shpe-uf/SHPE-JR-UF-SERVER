@@ -204,7 +204,10 @@ module.exports = {
       try {
         const user = await User.findOne({ email });
         await user.delete();
-        return "User deleted successfully";
+
+        let users = await User.find();
+        console.log(users);
+        return users;
       } catch (err) {
         throw new Error(err);
       }
