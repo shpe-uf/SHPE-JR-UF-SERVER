@@ -173,6 +173,7 @@ module.exports = {
         token
       };
     },
+    
     async deleteUser(_, { email, currentEmail }) {
       let { errors, valid } = validateEmailInput(email);
 
