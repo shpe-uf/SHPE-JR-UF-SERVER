@@ -203,10 +203,17 @@ module.exports = {
 
       try {
         const user = await User.findOne({ email });
+
+        if (!user) {
+          errors.general = "User to be deleted not found";
+          throw new UserInputError("User to be deleted not found", {
+            errors
+          });
+        }
+
         await user.delete();
 
         let users = await User.find();
-        console.log(users);
         return users;
       } catch (err) {
         throw new Error(err);
