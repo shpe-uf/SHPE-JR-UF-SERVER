@@ -13,6 +13,13 @@ module.exports = gql`
     password: String!
     createdAt: String!
     permission: String!
+    school: School!
+  }
+
+  type School {
+    id: ID!
+    name: String!
+    users: [User]!
   }
 
   ### QUERY AND MUTATION INPUTS ###
@@ -31,6 +38,8 @@ module.exports = gql`
   type Query {
     getUsers: [User]
     getUser(userId: ID!): User
+    getSchools: [School]
+    getSchool(schoolId: ID!): School
   }
 
   ### MUTATIONS LIST ###
@@ -44,5 +53,7 @@ module.exports = gql`
       currentEmail: String!
       permission: String!
     ): User!
+    createSchool(name: String!): School!
+    addStudent(schoolId: String!, username: String!): School!
   }
 `;
