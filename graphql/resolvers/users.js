@@ -193,11 +193,12 @@ module.exports = {
           errors
         });
       }
-
-      if (!loggedInUser.permission.includes("admin")) {
+      
+      // in order to delete a user, one must be an admin or the same user
+      if (!loggedInUser.permission.includes("admin") && email != currentEmail) {
         valid = false;
-        errors.general = "Must be an admin to delete a user.";
-        throw new UserInputError("Must be an admin to delete a user.", {
+        errors.general = "Must be an admin or the same user to delete a user.";
+        throw new UserInputError("Must be an admin or the same user to delete a user.", {
           errors
         });
       }
