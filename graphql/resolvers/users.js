@@ -9,7 +9,7 @@ require("dotenv").config();
 const {
   validateRegisterInput,
   validateLoginInput,
-  validateEmailInput,
+  validateEmailInput
 } = require("../../util/validators.js");
 
 function generateToken(user, time) {
@@ -19,11 +19,11 @@ function generateToken(user, time) {
       email: user.email,
       username: user.username,
       firstName: user.firstName,
-      lastName: user.lastName,
+      lastName: user.lastName
     },
     process.env.SECRET,
     {
-      expiresIn: time,
+      expiresIn: time
     }
   );
 }
@@ -34,7 +34,7 @@ module.exports = {
       try {
         const users = await User.find().sort({
           lastName: 1,
-          firstName: 1,
+          firstName: 1
         });
         return users;
       } catch (err) {
@@ -52,7 +52,7 @@ module.exports = {
       } catch (err) {
         throw new Error(err);
       }
-    },
+    }
   },
   Mutation: {
     async login(_, { username, password, remember }) {
@@ -83,7 +83,7 @@ module.exports = {
       return {
         ...user._doc,
         id: user._id,
-        token,
+        token
       };
     },
     async register(
@@ -95,8 +95,8 @@ module.exports = {
           username,
           email,
           password,
-          confirmPassword,
-        },
+          confirmPassword
+        }
       }
     ) {
       firstName = firstName.trim();
@@ -120,7 +120,7 @@ module.exports = {
 
       /*check that user/email doesn't already exist*/
       const isUsernameDuplicate = await User.findOne({
-        username,
+        username
       });
 
       if (isUsernameDuplicate) {
@@ -128,14 +128,14 @@ module.exports = {
           "An account with that username already exists.",
           {
             errors: {
-              username: "An account with that username already exists.",
-            },
+              username: "An account with that username already exists."
+            }
           }
         );
       }
 
       const isEmailDuplicate = await User.findOne({
-        email,
+        email
       });
 
       if (isEmailDuplicate) {
@@ -143,8 +143,8 @@ module.exports = {
           "An account with that e-mail already exists.",
           {
             errors: {
-              email: "An account with that email already exists.",
-            },
+              email: "An account with that email already exists."
+            }
           }
         );
       }
@@ -159,7 +159,7 @@ module.exports = {
         email,
         password,
         createdAt: new Date().toISOString(),
-        permission: "member",
+        permission: "member"
       });
 
       const res = await newUser.save();
@@ -170,30 +170,63 @@ module.exports = {
       return {
         ...res._doc,
         id: res._id,
-        token,
+        token
       };
     },
-    async deleteUser(_, { userId }) {
-      try {
-        const user = await User.findById(userId);
-        await user.delete();
-        return "User deleted successfully";
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
-    async changePermission(_,
-      {
-        email,
-        currentEmail,
-        permission
-      }
-    ) {
+    
+    async deleteUser(_, { email, currentEmail }) {
       let { errors, valid } = validateEmailInput(email);
 
       if (!valid) {
         throw new UserInputError("Errors.", {
-          errors,
+          errors
+        });
+      }
+
+      const loggedInUser = await User.findOne({
+        email: currentEmail
+      });
+
+      if (!loggedInUser) {
+        errors.general = "User not found";
+        throw new UserInputError("User not found", {
+          errors
+        });
+      }
+      
+      // in order to delete a user, one must be an admin or the same user
+      if (!loggedInUser.permission.includes("admin") && email != currentEmail) {
+        valid = false;
+        errors.general = "Must be an admin or the same user to delete a user.";
+        throw new UserInputError("Must be an admin or the same user to delete a user.", {
+          errors
+        });
+      }
+
+      try {
+        const user = await User.findOne({ email });
+
+        if (!user) {
+          errors.general = "User to be deleted not found";
+          throw new UserInputError("User to be deleted not found", {
+            errors
+          });
+        }
+
+        await user.delete();
+
+        let users = await User.find();
+        return users;
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    async changePermission(_, { email, currentEmail, permission }) {
+      let { errors, valid } = validateEmailInput(email);
+
+      if (!valid) {
+        throw new UserInputError("Errors.", {
+          errors
         });
       }
 
@@ -201,50 +234,49 @@ module.exports = {
         valid = false;
         errors.general = "Can't change your own permissions";
         throw new UserInputError("Can't change your own permissions", {
-          errors,
+          errors
         });
       }
 
       //loggedInUser is the current user that's trying to change another user's permissions
       const loggedInUser = await User.findOne({
-        email: currentEmail,
+        email: currentEmail
       });
 
       if (!loggedInUser) {
         errors.general = "User not found";
         throw new UserInputError("User not found", {
-          errors,
+          errors
         });
       }
 
-      if(!loggedInUser.permission.includes('admin')){
+      if (!loggedInUser.permission.includes("admin")) {
         valid = false;
         errors.general = "Must be an admin to change permission";
         throw new UserInputError("Must be an admin to change permission", {
-          errors,
+          errors
         });
       }
 
-      const options = {new: true}
+      const options = { new: true };
 
       const user = await User.findOneAndUpdate(
         {
-          email,
+          email
         },
         {
-          permission,
+          permission
         },
         options
       );
       if (!user) {
         errors.general = "User not found";
         throw new UserInputError("User not found", {
-          errors,
+          errors
         });
       } else {
         return user;
       }
     }
-
-  },
+  }
 };
