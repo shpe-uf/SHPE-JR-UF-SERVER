@@ -32,20 +32,39 @@ module.exports = {
     }
   },
   Mutation: {
-    async createSchool(_, { name }) {
-      name = name.trim();
+    async createSchool(_, { currentEmail, name }) {
 
-      /*check that user/email doesn't already exist*/
-      const isNameDuplicate = await School.findOne({
-        name,
+      const loggedInUser = await User.findOne({
+        email: currentEmail
       });
 
-      if (isNameDuplicate) {
+      if (!loggedInUser) {
+        errors.general = "User not found";
+        throw new UserInputError("User not found", {
+          errors
+        });
+      }
+
+      // in order to create a school, one must be an admin
+      if (!loggedInUser.permission.includes("admin")) {
+        valid = false;
+        errors.general = "Must be an admin to create a school.";
+        throw new UserInputError("Must be an admin to create a school.", {
+          errors
+        });
+      }
+
+      name = name.trim();
+
+      /*check that school with that name doesn't already exist*/
+      const isSchoolNameDuplicate = await School.findOne({ name });
+
+      if (isSchoolNameDuplicate) {
         throw new UserInputError(
-          "An account with that name already exists.",
+          "A school with that name already exists.",
           {
             errors: {
-              name: "An account with that name already exists.",
+              name: "A school with that name already exists.",
             },
           }
         );
@@ -58,9 +77,9 @@ module.exports = {
 
       await newSchool.save();
 
-      const res = School.findOne({ name });
+      const updatedSchools = await School.find();
 
-      return res;
+      return updatedSchools;
     },
     async addStudent(_, { schoolId, username }) {
       console.log(schoolId);
@@ -76,7 +95,22 @@ module.exports = {
         });
       }
 
-      var updatedSchool = await School.findOneAndUpdate( {schoolId} );
+      var updatedSchool = await School.findOneAndUpdate( 
+        {schoolId},
+        {
+          $push: {
+            users: {
+              $each: [
+                {
+                  firstName: user.firstName,
+                  lastName: user.lastName,
+                  username: user.username,
+                  email: user.email,                            }
+              ],
+              $sort: { createdAt: 1 }
+            }
+          }
+        } );
 
       return updatedSchool;
     }

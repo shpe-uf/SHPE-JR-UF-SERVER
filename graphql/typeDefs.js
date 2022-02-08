@@ -53,7 +53,7 @@ module.exports = gql`
       currentEmail: String!
       permission: String!
     ): User!
-    createSchool(name: String!): School!
+    createSchool(currentEmail: String!, name: String!): [School!]!
     addStudent(schoolId: String!, username: String!): School!
   }
 `;
