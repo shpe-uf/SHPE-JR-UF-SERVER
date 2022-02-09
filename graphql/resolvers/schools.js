@@ -226,16 +226,17 @@ module.exports = {
       }
 
       // user must not already be in school
-      const userInSchool = School.find({ 
-        "users": { 
-          firstName: user.firstName, 
-          lastName: user.lastName,
-          username: user.username,
-          email: user.email,                            
+      const userInSchool = await School.findOne(
+        { name }, 
+        {"users": { 
+          "firstName": user.firstName, 
+          "lastName": user.lastName,
+          "username": user.username,
+          "email": user.email,                            
         }
       });
 
-      if (userInSchool) {
+      if (userInSchool.users.length > 0) {
         errors.general = "User already is in school.";
         throw new UserInputError("User already is in school.", {
           errors
@@ -258,7 +259,77 @@ module.exports = {
               $sort: { createdAt: 1 }
             }
           }
-        } );
+        }
+      );
+
+      return updatedSchool;
+    },
+    async removeStudent(_, { currentEmail, email, name }) {
+      let { errors, valid } = validateEmailInput(email);
+
+      if (!valid) {
+        throw new UserInputError("Errors.", {
+          errors
+        });
+      }
+
+      const loggedInUser = await User.findOne({
+        email: currentEmail
+      });
+
+      if (!loggedInUser) {
+        errors.general = "User not found";
+        throw new UserInputError("User not found", {
+          errors
+        });
+      }
+      
+      // must be an admin to add user to school
+      if (!loggedInUser.permission.includes("admin") && email != currentEmail) {
+        valid = false;
+        errors.general = "Must be an admin to remove a user to school.";
+        throw new UserInputError("Must be an admin to remove a user to school.", {
+          errors
+        });
+      }
+
+      // user must exist
+      const user = await User.findOne({
+        email: email
+      });
+
+      if (!user) {
+        throw new UserInputError("User to be removed from school not found.", {
+          errors: {
+            email: "User to be removed from school not found."
+          }
+        });
+      }
+
+      // school must exist
+      const school = await School.findOne({ name });
+
+      if (!school) {
+        throw new UserInputError("School to be removing user from not found", {
+          errors: {
+            name: "School to be removing user from not found"
+          }
+        });
+      }
+
+      const updatedSchool = await School.findOneAndUpdate( 
+        {name},
+        {
+          $pull: {
+            users: {
+              "firstName": user.firstName,
+              "lastName": user.lastName,
+              "username": user.username,
+              "email": user.email,    
+            }                        
+          }
+        }
+      );
 
       return updatedSchool;
     }

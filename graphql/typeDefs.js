@@ -57,5 +57,6 @@ module.exports = gql`
     deleteSchool(currentEmail: String!, name: String!): [School!]!
     editSchool(currentEmail: String!, schoolId: String!, name: String!): [School!]!
     addStudent(currentEmail: String!, email: String!, name: String!): School!
+    removeStudent(currentEmail: String!, email: String!, name: String!): School!
   }
 `;
