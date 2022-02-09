@@ -157,9 +157,9 @@ module.exports = {
       const school = await School.findOne({ schoolId });
 
       if (!school) {
-        throw new UserInputError("School to be edited not found", {
+        throw new UserInputError("School not found.", {
           errors: {
-            name: "School to be edited not found"
+            name: "School not found."
           }
         });
       }
@@ -207,9 +207,9 @@ module.exports = {
       });
 
       if (!user) {
-        throw new UserInputError("User to be added to school not found", {
+        throw new UserInputError("User to be added to school not found.", {
           errors: {
-            email: "User to be added to school not found"
+            email: "User to be added to school not found."
           }
         });
       }
@@ -218,9 +218,9 @@ module.exports = {
       const school = await School.findOne({ name });
 
       if (!school) {
-        throw new UserInputError("School to be adding user to not found", {
+        throw new UserInputError("School not found.", {
           errors: {
-            name: "School to be adding user to not found"
+            name: "School not found."
           }
         });
       }
@@ -310,9 +310,9 @@ module.exports = {
       const school = await School.findOne({ name });
 
       if (!school) {
-        throw new UserInputError("School to be removing user from not found", {
+        throw new UserInputError("School not found", {
           errors: {
-            name: "School to be removing user from not found"
+            name: "School not found"
           }
         });
       }
