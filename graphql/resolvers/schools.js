@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const { UserInputError } = require("apollo-server");
 
 const School = require("../../models/School.js");
+const User = require("../../models/User.js");
 
 require("dotenv").config();
 
@@ -39,18 +40,20 @@ module.exports = {
       });
 
       if (!loggedInUser) {
-        errors.general = "User not found";
-        throw new UserInputError("User not found", {
-          errors
+        throw new UserInputError("User not found.", {
+          errors: {
+            email: "User not found."
+          }
         });
       }
 
       // in order to create a school, one must be an admin
       if (!loggedInUser.permission.includes("admin")) {
         valid = false;
-        errors.general = "Must be an admin to create a school.";
         throw new UserInputError("Must be an admin to create a school.", {
-          errors
+          errors: {
+            email: "Must be an admin to create a school."
+          }
         });
       }
 
