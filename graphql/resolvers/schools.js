@@ -47,19 +47,19 @@ module.exports = {
         });
       }
 
-      // in order to create a school, one must be an admin
+      // must be an admin to create a school
       if (!loggedInUser.permission.includes("admin")) {
         valid = false;
         throw new UserInputError("Must be an admin to create a school.", {
           errors: {
-            email: "Must be an admin to create a school."
+            permission: "Must be an admin to create a school."
           }
         });
       }
 
       name = name.trim();
 
-      /*check that school with that name doesn't already exist*/
+      // check that school with that name doesn't already exist 
       const isSchoolNameDuplicate = await School.findOne({ name });
 
       if (isSchoolNameDuplicate) {
@@ -84,9 +84,49 @@ module.exports = {
 
       return updatedSchools;
     },
-    async addStudent(_, { schoolId, username }) {
-      console.log(schoolId);
-      console.log(username);
+    async deleteSchool(_, { currentEmail, name }) {
+      const loggedInUser = await User.findOne({
+        email: currentEmail
+      });
+
+      if (!loggedInUser) {
+        throw new UserInputError("User not found.", {
+          errors: {
+            email: "User not found."
+          }
+        });
+      }
+
+      // must be an admin to delete a school
+      if (!loggedInUser.permission.includes("admin")) {
+        valid = false;
+        throw new UserInputError("Must be an admin to delete a school.", {
+          errors: {
+            permission: "Must be an admin to delete a school."
+          }
+        });
+      }
+
+      try {
+        const school = await School.findOne({ name });
+
+        if (!school) {
+          throw new UserInputError("School to be deleted not found", {
+            errors: {
+              name: "School to be deleted not found"
+            }
+          });
+        }
+
+        await school.delete();
+
+        let schools = await School.find();
+        return schools;
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    async addStudent(_, { name, username }) {
       const user = await User.findOne({
         username
       });
@@ -99,7 +139,7 @@ module.exports = {
       }
 
       var updatedSchool = await School.findOneAndUpdate( 
-        {schoolId},
+        {name},
         {
           $push: {
             users: {
