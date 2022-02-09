@@ -126,6 +126,48 @@ module.exports = {
         throw new Error(err);
       }
     },
+    async editSchool(_, { currentEmail, schoolId, name }) {
+      const loggedInUser = await User.findOne({
+        email: currentEmail
+      });
+
+      if (!loggedInUser) {
+        throw new UserInputError("User not found.", {
+          errors: {
+            email: "User not found."
+          }
+        });
+      }
+
+      // must be an admin to edit a school
+      if (!loggedInUser.permission.includes("admin")) {
+        valid = false;
+        throw new UserInputError("Must be an admin to edit a school.", {
+          errors: {
+            permission: "Must be an admin to edit a school."
+          }
+        });
+      }
+
+      const school = await School.findOne({ schoolId });
+      console.log(school);
+
+      if (!school) {
+        throw new UserInputError("School to be edited not found", {
+          errors: {
+            name: "School to be edited not found"
+          }
+        });
+      }
+
+      const updatedSchool = await User.findOneAndUpdate(
+        { schoolId },
+        { name },
+        { new: true}
+      );
+
+      return updatedSchool;
+  },
     async addStudent(_, { name, username }) {
       const user = await User.findOne({
         username
